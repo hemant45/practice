@@ -20,15 +20,5 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="lib" path="D:/Own/external/guava-15.0-rc1.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/kettle-core-7.0.0.0-25.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/kettle-engine-7.0.0.0-25.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/kettle-json-plugin-7.0.0.0-25.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/kettle-xml-plugin-7.0.0.0-25.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/metastore-7.0.0.0-25.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/ojdbc7-12.1.0.2.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/org.json-20120521.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/pentaho-mongodb-delete-plugin-1.0.0-RELEASE.jar"/>
-	<classpathentry kind="lib" path="D:/Own/external/pentaho-mongodb-plugin-5.0.5.jar"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>

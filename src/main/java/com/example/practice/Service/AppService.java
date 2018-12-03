@@ -13,7 +13,7 @@ public class AppService {
 	@Autowired
 	AppDAO appdao;
 	
-	public void getAppDetails() {
+	public void getAppDetails() throws InterruptedException {
 		appdao.getAppDetails();
 	}
 	

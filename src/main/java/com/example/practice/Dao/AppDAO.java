@@ -1,6 +1,7 @@
 package com.example.practice.Dao;
 
 import org.bson.Document;
+import org.json.JSONObject;
 import org.springframework.stereotype.Repository;
 
 import com.mongodb.Cursor;
@@ -14,7 +15,7 @@ import com.mongodb.client.MongoDatabase;
 @Repository
 public class AppDAO {
 
-	public void getAppDetails(){
+	public void getAppDetails() throws InterruptedException{
 		 MongoClient mclient = new MongoClient("localhost",27017);
 		DB database = mclient.getDB("localDB");
 	
@@ -27,8 +28,11 @@ public class AppDAO {
 				
 		while(iterable.hasNext()) {
 			System.out.println(iterable.next());
+			JSONObject dataRetreived = (JSONObject)iterable.next(); 
+			System.out.println(dataRetreived.toString());
+			Thread.currentThread().sleep(20);
 		}
-		
+				
 		
 	}
 }

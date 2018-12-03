@@ -9,22 +9,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.practice.Dao.MongoDAO;
+
 @SpringBootApplication
 @RestController
 public class PracticeApplication {
 
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(PracticeApplication.class, args);
-		for (String name : ctx.getBeanDefinitionNames()) {
-			//System.out.println(name);
-		}
+		ApplicationContext ctx = SpringApplication.run(PracticeApplication.class, args);		
+	System.out.println(new MongoDAO().getMogoCollectionById("AllocationMeta", "0"));
 	}
+	
 	
 	@GetMapping("/test")
 	public String helloWorld() {
-		System.out.println("Hello World");
 		return "Hello World";
 	}
+	
 	
 	
 }

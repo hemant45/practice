@@ -13,7 +13,7 @@ public class AppController {
 	AppService appservice;
 	
 	@GetMapping("/appDetails")
-	public String getAppDetails() {
+	public String getAppDetails() throws InterruptedException {
 		appservice.getAppDetails();
 		return "Processed";
 	}
