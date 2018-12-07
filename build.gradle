@@ -44,6 +44,9 @@ dependencies {
 	compile('org.apache.kafka:kafka_2.12:2.0.1')
 	compile('org.apache.kafka:kafka-clients:0.8.2.1')
 	compile('org.scala-lang:scala-library:2.12.3')	
+	compile('net.sf.jsqlparser:jsqlparser:0.8.0')
+	compile('org.antlr:antlr4:4.7.1')
+	compile('com.github.julianthome:inmemantlr-api:1.4')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
