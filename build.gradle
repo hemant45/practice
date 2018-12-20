@@ -29,6 +29,7 @@ ext {
 }
 
 dependencies {
+	compile fileTree(dir: "${rootDir}/lib/onixs", include: '**/*.*', exclude: '**/*sources.jar')
 	compile('org.springframework.boot:spring-boot-starter-activemq')
 	compile('com.fasterxml.jackson.core:jackson-databind')
 	compile('org.springframework.boot:spring-boot-starter-web')
@@ -47,6 +48,7 @@ dependencies {
 	compile('net.sf.jsqlparser:jsqlparser:0.8.0')
 	compile('org.antlr:antlr4:4.7.1')
 	compile('com.github.julianthome:inmemantlr-api:1.4')
+	compile('joda-time:joda-time:2.1')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
