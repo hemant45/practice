@@ -15,14 +15,18 @@ import biz.onixs.fix.dictionary.Version;
 import biz.onixs.fix.engine.Engine;
 import biz.onixs.fix.engine.Session;
 import biz.onixs.fix.parser.Field;
+import biz.onixs.fix.parser.Group;
 import biz.onixs.fix.parser.Message;
 
 public class FixMessageParser {
 
-	private static String jsonMetaString = "{\"type\":\"OBJECT\",\"elements\":[{\"id\":\"75\",\"name\":\"TradeDate\",\"type\":\"DATE\"},{\"id\":\"33\",\"name\":\"NoSides\",\"type\":\"ARRAY\",\"elements\":[{\"id\":\"98\",\"name\":\"Side\",\"type\":\"NUMBER\"},{\"id\":\"55\",\"name\":\"key1\",\"type\":\"STRING\"}]}]}";
+	//private static String jsonMetaString = "{\"type\":\"OBJECT\",\"elements\":[{\"id\":\"75\",\"name\":\"TradeDate\",\"type\":\"DATE\"},{\"id\":\"33\",\"name\":\"NoSides\",\"type\":\"ARRAY\",\"elements\":[{\"id\":\"98\",\"name\":\"Side\",\"type\":\"NUMBER\"},{\"id\":\"55\",\"name\":\"key1\",\"type\":\"STRING\"}]}]}";
+
+	private static String jsonMetaString = "{\"type\":\"OBJECT\",\"elements\":[{\"id\":\"8\",\"name\":\"Version\",\"type\":\"STRING\"},{\"id\":\"9\",\"name\":\"Price\",\"type\":\"INTEGER\"},{\"id\":\"35\",\"name\":\"CODE\",\"type\":\"STRING\"},{\"id\":\"60\",\"name\":\"TRADE DATE\",\"type\":\"DATE\"},{\"id\":\"386\",\"name\":\"NoTradingSessions\",\"type\":\"ARRAY\",\"elements\":[{\"id\":\"336\",\"name\":\"TradingSessionID\",\"type\":\"NUMBER\"},{\"id\":\"625\",\"name\":\"TradingSessionSubID\",\"type\":\"NUMBER\"}]}]}";
 
 	Message message= new Message("");
 
+	//static JSONObject parsedJSON = new JSONObject();
 
 	public static void main(String[] args) {
 
@@ -38,21 +42,23 @@ public class FixMessageParser {
 			properties.put("SocketConnectPort", "41811");
 			properties.put("ConnectionRetries.Interval", 1000);
 			properties.put("LicenseFile", "D:/softwares/jars/OnixS.lic");
-			
-			
+
+
 			properties.put("SenderCompID", "EKAPLUS");
 			properties.put("TargetCompID", "REDITKTS");
-			
+
 			properties.put("OnbehalfOfCompID", "REDI");
 			properties.put("OnbehalfOfSubID", "woner1");
 
 			engine = Engine.init(properties);
-			
+
 			Message msg1 = Message.create("A", Version.FIX44);
-			msg1.init("8=FIX.4.29=13235=D34=1649=BANZAI52=20160312-20:00:05.51856=EXEC11=145781280539421=138=10040=154=155=VOD.L59=060=20160312-20:00:05.51810=198");
-			
+			msg1.init("8=FIX.4.29=13235=D34=1649=BANZAI52=20160312-20:00:05.51856=EXEC11=145781280539421=138=10040=154=155=VOD.L59=060=20160312-20:00:05.51810=198386=3336=12323336=564625=12");
+
 			System.out.println("Message : " + msg1.toString());
-			
+
+			System.out.println("parsed : " + parse(jsonMeta, msg1));
+
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -64,20 +70,91 @@ public class FixMessageParser {
 
 
 	}
-	
-	/*Using Message
-*/
+
+
 	public static JSONObject parse(JSONObject jsonMeta, Message msg) {
 		
+		JSONObject parsedJSON = new JSONObject();
+		
+		if(jsonMeta.get("type")!= null && jsonMeta.get("type").equals("OBJECT")) {
+			JSONArray childArray = (JSONArray) jsonMeta.get("elements");
+
+			for(int i=0; i< childArray.length(); i++) {
+				parse(childArray.getJSONObject(i),msg);
+			}
+		} 
 		
 		
-		
-		return null;
+		else if (jsonMeta.get("type").equals("ARRAY")) {
+			Group repeatingGroup = msg.getGroup(jsonMeta.getInt("id"));
+			if(repeatingGroup != null) {
+				JSONArray sidesJson = new JSONArray();
+			}
+			parsedJSON.append((String) jsonMeta.get("name"),
+					msg.get(jsonMeta.getInt("id")));
+
+		} 		
+		else {
+			parsedJSON.append((String) jsonMeta.get("name"),
+					msg.get(jsonMeta.getInt("id")));
+
+		} 
+		return parsedJSON;
 	}
+
+	public static JSONArray parseRepeatingGroups(JSONObject jsonMeta, Message msg) {
+		
+		JSONArray parsedJSON = new JSONArray();
+		
+		if(jsonMeta.get("type")!= null && jsonMeta.get("type").equals("OBJECT")) {
+			JSONArray childArray = (JSONArray) jsonMeta.get("elements");
+
+			for(int i=0; i< childArray.length(); i++) {
+				parsedJSON.put(parse(childArray.getJSONObject(i),msg));
+			}
+		} 
+		
+		
+		else if (jsonMeta.get("type").equals("ARRAY")) {
+			Group repeatingGroup = msg.getGroup(jsonMeta.getInt("id"));
+			if(repeatingGroup != null) {
+				JSONArray sidesJson = new JSONArray();
+			}
+
+		} 		
+		else {
+			parsedJSON.append((String) jsonMeta.get("name"),
+					msg.get(jsonMeta.getInt("id")));
+
+		} 
+		return parsedJSON;
+	}
+
+
+
+	/*Using Message
+	 */
+	/*public static JSONObject parse(JSONObject jsonMeta, Message msg) {
+		JSONObject parsedJSON = new JSONObject();
+
+		if(jsonMeta.get("type")!= null && jsonMeta.get("type").equals("OBJECT")) {
+			JSONArray childArray = (JSONArray) jsonMeta.get("elements");
+
+			for(int i=0; i< childArray.length(); i++) {
+				parse(childArray.getJSONObject(i),msg);
+			}
+		} else if (jsonMeta.get("type").equals("ARRAY")) {
+
+		} else {
+			parsedJSON.append((String) jsonMeta.get("name"),
+					msg.get(jsonMeta.getInt("id")));
+		} 
+		return parsedJSON;
+	}*/
 
 	public static JSONObject parse(JSONObject jsonMeta, String[] msgTokens) {
 		JSONObject parsedJson = new JSONObject();
-		
+
 		if(jsonMeta.get("type").equals("OBJECT")) {
 			JSONArray childArray = (JSONArray) jsonMeta.get("elements");
 
@@ -93,8 +170,8 @@ public class FixMessageParser {
 
 			}
 		} else if(jsonMeta.get("type").equals("ARRAY")) {
-			
-			
+
+
 			JSONArray childArray = (JSONArray) jsonMeta.get("elements");
 			for(int i=0; i< childArray.length(); i++) {
 

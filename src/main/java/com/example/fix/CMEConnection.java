@@ -31,8 +31,15 @@ public class CMEConnection {
 			prop.put("ExecutionFacility", "CME");
 			prop.put("DaysInThePastAllowedToQuery", "5");
 			prop.put("SslProtocol", "Tls12");
-			prop.put("targetCompId", "CME");
+			prop.put("targetCompId", "CMESTPFIX2");
 			prop.put("LicenseFile", "D:/softwares/jars/OnixS.lic");
+			prop.put("MsgSeqNum", 1);
+			prop.put("SendingTime", System.currentTimeMillis());
+			prop.put("EncryptMethod",0);
+			prop.put("HeartBtInt",30);
+			prop.put("ResetSeqNumFlag",'Y');
+			prop.put("port","");
+			
 
 			
 			if(Engine.isNotInited()) {
@@ -48,10 +55,8 @@ public class CMEConnection {
 			
 			Message customLogonMessage = createLogon(prop);
 			
-			
-			
-			session.logonAsInitiator(prop.getProperty("url"), 
-					Integer.parseInt(prop.getProperty("CounterpartyPort")), 30, false, customLogonMessage);
+			session.logonAsInitiator(prop.getProperty("url"), 0,
+					30, false, customLogonMessage);
 
 			
 		}catch (Exception e) {
