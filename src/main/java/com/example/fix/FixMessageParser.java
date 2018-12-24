@@ -9,6 +9,7 @@ import java.util.Spliterator;
 import java.util.Spliterators;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import biz.onixs.fix.dictionary.Version;
@@ -80,22 +81,24 @@ public class FixMessageParser {
 			JSONArray childArray = (JSONArray) jsonMeta.get("elements");
 
 			for(int i=0; i< childArray.length(); i++) {
-				parse(childArray.getJSONObject(i),msg);
+				parsedJSON= mergeJSONObjects(parsedJSON, parse(childArray.getJSONObject(i),msg));
 			}
 		} 
 		
 		
 		else if (jsonMeta.get("type").equals("ARRAY")) {
+			parsedJSON.put((String) jsonMeta.get("name"),
+					msg.get(jsonMeta.getInt("id")));
 			Group repeatingGroup = msg.getGroup(jsonMeta.getInt("id"));
 			if(repeatingGroup != null) {
-				JSONArray sidesJson = new JSONArray();
+				JSONArray sidesJson = new JSONArray();			
 			}
-			parsedJSON.append((String) jsonMeta.get("name"),
+			parsedJSON.put((String) jsonMeta.get("name"),
 					msg.get(jsonMeta.getInt("id")));
 
 		} 		
 		else {
-			parsedJSON.append((String) jsonMeta.get("name"),
+			parsedJSON.put((String) jsonMeta.get("name"),
 					msg.get(jsonMeta.getInt("id")));
 
 		} 
@@ -123,14 +126,33 @@ public class FixMessageParser {
 
 		} 		
 		else {
-			parsedJSON.append((String) jsonMeta.get("name"),
-					msg.get(jsonMeta.getInt("id")));
+			parsedJSON.put(new JSONObject());
 
 		} 
 		return parsedJSON;
 	}
 
 
+	public static JSONObject mergeJSONObjects(JSONObject json1, JSONObject json2) {
+		JSONObject mergedJSON = new JSONObject();
+		try {
+			if(json1 == null || json1.length()==0) {
+				return json2;
+			} else if (json2 == null || json2.length()==0) {
+				return json1;
+			} else {
+				mergedJSON = new JSONObject(json1, JSONObject.getNames(json1));
+				for (String crunchifyKey : JSONObject.getNames(json2)) {
+					mergedJSON.put(crunchifyKey, json2.get(crunchifyKey));
+				}	
+			}
+			
+ 
+		} catch (JSONException e) {
+			throw new RuntimeException("JSON Exception" + e);
+		}
+		return mergedJSON;
+	}
 
 	/*Using Message
 	 */
