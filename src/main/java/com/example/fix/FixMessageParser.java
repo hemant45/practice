@@ -87,15 +87,12 @@ public class FixMessageParser {
 		
 		
 		else if (jsonMeta.get("type").equals("ARRAY")) {
-			parsedJSON.put((String) jsonMeta.get("name"),
-					msg.get(jsonMeta.getInt("id")));
-			Group repeatingGroup = msg.getGroup(jsonMeta.getInt("id"));
-			if(repeatingGroup != null) {
-				JSONArray sidesJson = new JSONArray();			
-			}
-			parsedJSON.put((String) jsonMeta.get("name"),
-					msg.get(jsonMeta.getInt("id")));
-
+			/*parsedJSON.put((String) jsonMeta.get("name"),
+					msg.get(jsonMeta.getInt("id")));*/
+			
+			parsedJSON.put((String) jsonMeta.get("name"), 
+					parseRepeatingGroups((JSONArray)jsonMeta.get("elements"),msg));
+			
 		} 		
 		else {
 			parsedJSON.put((String) jsonMeta.get("name"),
@@ -105,31 +102,15 @@ public class FixMessageParser {
 		return parsedJSON;
 	}
 
-	public static JSONArray parseRepeatingGroups(JSONObject jsonMeta, Message msg) {
+	public static JSONArray parseRepeatingGroups(JSONArray jsonMeta, Message msg) {
+		JSONArray repeatingGroups = new JSONArray();
 		
-		JSONArray parsedJSON = new JSONArray();
-		
-		if(jsonMeta.get("type")!= null && jsonMeta.get("type").equals("OBJECT")) {
-			JSONArray childArray = (JSONArray) jsonMeta.get("elements");
-
-			for(int i=0; i< childArray.length(); i++) {
-				parsedJSON.put(parse(childArray.getJSONObject(i),msg));
-			}
-		} 
+		for(int i=0; i <jsonMeta.length(); i++) {
+			repeatingGroups.put(parse(jsonMeta.getJSONObject(i),msg));
+		}
 		
 		
-		else if (jsonMeta.get("type").equals("ARRAY")) {
-			Group repeatingGroup = msg.getGroup(jsonMeta.getInt("id"));
-			if(repeatingGroup != null) {
-				JSONArray sidesJson = new JSONArray();
-			}
-
-		} 		
-		else {
-			parsedJSON.put(new JSONObject());
-
-		} 
-		return parsedJSON;
+		return repeatingGroups;
 	}
 
 

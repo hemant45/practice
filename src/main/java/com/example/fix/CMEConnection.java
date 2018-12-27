@@ -1,5 +1,6 @@
 package com.example.fix;
 
+import java.net.URI;
 import java.util.Properties;
 
 import biz.onixs.fix.dictionary.Version;
@@ -7,6 +8,7 @@ import biz.onixs.fix.engine.Engine;
 import biz.onixs.fix.engine.Session;
 import biz.onixs.fix.parser.Message;
 import biz.onixs.fix.tag.Tag;
+import biz.onixs.util.settings.PropertyBasedSettings;
 
 public class CMEConnection {
 
@@ -21,7 +23,10 @@ public class CMEConnection {
 		Session session = null;
 		Properties prop = new Properties();
 		try {
-			prop.put("url", "https://servicesnr.cmegroup.com/cmestp/query");
+			
+			
+			
+			prop.put("uri", new URI ("https://servicesnr.cmegroup.com/cmestp/query"));
 			prop.put("senderCompID", "eka_canada_inc");
 			prop.put("senderSubID", "API_EKA");
 			prop.put("password", "Enc0mp@ss1");
@@ -39,6 +44,7 @@ public class CMEConnection {
 			prop.put("HeartBtInt",30);
 			prop.put("ResetSeqNumFlag",'Y');
 			prop.put("port","");
+			//prop.put("host","");
 			
 
 			
@@ -47,10 +53,15 @@ public class CMEConnection {
 				System.out.println("Engine initiated");
 			}
 			
-			session = new Session(prop.getProperty("senderCompID"), 
-					prop.getProperty("targetCompId"), Version.FIX44);
+			/*session = new Session(prop.getProperty("senderCompID"), 
+					prop.getProperty("targetCompId"), Version.FIX44);*/
 			
-			System.out.println("Session : "+ session.toStringDetailed());
+			final String url = "https://servicesnr.cmegroup.com/cmestp/query";
+			final String senderCompId = "SenderCompId";
+			final String senderSubId = "SenderSubId";
+			final String password = "Password";
+
+			final Session session1 = new Session(new URL(url), senderCompId, senderSubId, password);
 			
 			
 			Message customLogonMessage = createLogon(prop);
